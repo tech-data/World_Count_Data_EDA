@@ -17,9 +17,9 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 st.title('World Population Count')
 
 st.markdown("""
-This app performs simple webscraping and visualisation of wikipidea world count data 
+This app performs simple webscraping and visualisation of wikipedia world count data 
 * **Python libraries:** base64, pandas, streamlit, numpy, matplotlib, BeautifulSoup 
-* **Data source:** [wikipidea.com](https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population).
+* **Data source:** [wikipedia.com](https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population).
 """)
 choices=['Population By Region', 'Population By Country']
 st.sidebar.header('Choose a Visualisation')
@@ -52,7 +52,7 @@ def load(choice):
         result.head(20).plot(x = "Country / Dependency", y = "Population", kind = "bar", figsize = (9, 8))
 
     return result
-# Web scraping of wikipidea population count page
+# Web scraping of wikipedia population count page
 def country(df):
     return df.sort_values(by = ['Population'], ascending=False )
 #group data by regions to count population by each region 
@@ -62,7 +62,7 @@ def region(df):
 dataa = load(selected_choice)
         
 
-st.header('World Population count')
+st.header('World Population Count')
 st.write('Data Dimension: ' + str(dataa.shape[0]) + ' rows and ' + str(dataa.shape[1]) + ' columns.')
 st.dataframe(dataa)
 
