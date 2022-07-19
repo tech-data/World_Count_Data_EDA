@@ -6,19 +6,15 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
-from bs4 import BeautifulSoup
-from urllib.request import urlopen
-import matplotlib.pyplot as mp
 import base64
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-st.title('World Population Count')
+st.title('World Population Data')
 
 st.markdown("""
-This app performs simple webscraping and visualisation of wikipedia world count data 
-* **Python libraries:** base64, pandas, streamlit, numpy, matplotlib, BeautifulSoup 
+This app performs simple webscraping and visualisation of wikipedia world population data 
+* **Python libraries:** base64, pandas, streamlit, matplotlib 
 * **Data source:** [wikipedia.com](https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population).
 """)
 choices=['Population By Region', 'Population By Country']
@@ -31,15 +27,15 @@ def load(choice):
     html = pd.read_html(url, header = 0, flavor = 'bs4')
     df = html[0]
     df = df.drop(['Notes'], axis = 1) # Deletes 'Notes' column 
-    df = df.drop(['Source (official or from the United Nations)'], axis = 1) # Deletes 'Sources' column 
+    df = df.drop(['Source (official or from the United Nations)'], axis = 1) # Deletes 'Source' column 
 
     df = df.iloc[1:]
 
-    df['UN Region'] = df['UN Region'].str.replace('[[b]]', "")
-    df['UN Region'] = df['UN Region'].str.replace('[[c]]', "")
-    df['UN Region'] = df['UN Region'].str.replace('[[]', "")
+    df['UN Region'] = df['UN Region'].str.replace('[[b]]', "", regex=True)
+    df['UN Region'] = df['UN Region'].str.replace('[[c]]', "", regex=True)
+    df['UN Region'] = df['UN Region'].str.replace('[[]', "", regex=True)
 
-    df['Percentage of the world'] = df['Percentage of the world'].str.replace("%", "")
+    df['Percentage of the world'] = df['Percentage of the world'].str.replace("%", "", regex=True)
     df['Percentage of the world'] = df['Percentage of the world'].astype(float)
     
     if choice == choices[0]:
@@ -52,7 +48,7 @@ def load(choice):
         result.head(20).plot(x = "Country / Dependency", y = "Population", kind = "bar", figsize = (9, 8))
 
     return result
-# Web scraping of wikipedia population count page
+# Web scraping of wikipedia world population data page
 def country(df):
     return df.sort_values(by = ['Population'], ascending=False )
 #group data by regions to count population by each region 
@@ -62,7 +58,7 @@ def region(df):
 dataa = load(selected_choice)
         
 
-st.header('World Population Count')
+st.header('World Population Data')
 st.write('Data Dimension: ' + str(dataa.shape[0]) + ' rows and ' + str(dataa.shape[1]) + ' columns.')
 st.dataframe(dataa)
 
